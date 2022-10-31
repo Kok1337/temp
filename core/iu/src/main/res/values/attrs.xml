@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="SearchableSpinner">
+        <attr name="autoSelect" format="boolean" />
+        <attr name="title" format="string" />
+        <attr name="emptyItem" format="boolean" />
+    </declare-styleable>
+
+    <declare-styleable name="HighlighterState">
+        <attr name="state_item_highlighted" format="boolean" />
+    </declare-styleable>
+
+</resources>

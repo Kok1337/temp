@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_checked="false" android:state_selected="true">
+        <ripple android:color="@color/ripple">
+            <item>
+                <shape android:shape="oval">
+                    <stroke android:width="3dp" android:color="@color/white" android:dashWidth="11dp" android:dashGap="5dp" />
+                    <solid android:color="@color/black" />
+                </shape>
+            </item>
+        </ripple>
+    </item>
+    <item android:state_checked="false" android:state_selected="false">
+        <ripple android:color="@color/ripple">
+            <item>
+                <shape android:shape="oval">
+                    <solid android:color="@color/low_black" />
+                </shape>
+            </item>
+        </ripple>
+    </item>
+    <item android:state_checked="true" android:state_selected="false">
+        <ripple android:color="@color/ripple">
+            <item>
+                <shape android:shape="oval">
+                    <stroke android:width="2dp" android:color="@color/white" />
+                    <solid android:color="@color/black" />
+                </shape>
+            </item>
+        </ripple>
+    </item>
+</selector>

@@ -1,0 +1,22 @@
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        google()
+        mavenCentral()
+    }
+}
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+rootProject.name = "GlpmLocal"
+include ':app'
+include ':core:iu'
+include ':core:result'
+include ':core:database'
+include ':core:network'
+include ':feature-database-preparation'
+include ':core:utils:file'

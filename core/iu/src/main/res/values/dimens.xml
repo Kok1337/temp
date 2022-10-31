@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="title_text_size">30sp</dimen>
+    <dimen name="big_text_size">24sp</dimen>
+    <dimen name="small_text_size">18sp</dimen>
+    <dimen name="path_text_size">12sp</dimen>
+    <dimen name="current_path_text_size">16sp</dimen>
+
+    <dimen name="toolbar_icon_size">54dp</dimen>
+    <dimen name="toolbar_padding">8dp</dimen>
+
+    <dimen name="item_vertical_half_padding">2.5dp</dimen>
+
+</resources>
