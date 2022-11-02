@@ -2,11 +2,31 @@
 <resources>
     <style name="Widget.GlpmLocal.Button" parent="Widget.AppCompat.Button">
         <item name="android:background">@drawable/vbg_button</item>
-        <item name="android:textColor">@color/text</item>
         <item name="android:gravity">center</item>
-        <item name="android:textSize">@dimen/big_text_size</item>
-        <item name="android:textAlignment">center</item>
         <item name="android:paddingStart">16dp</item>
         <item name="android:paddingEnd">16dp</item>
+        <item name="android:textAppearance">@style/WidgetTextAppearance</item>
     </style>
+
+    <style name="Widget.GlpmLocal.TextView" parent="Widget.AppCompat.TextView">
+        <item name="android:background">@drawable/vbg_textview</item>
+        <item name="android:gravity">center</item>
+        <item name="android:paddingStart">16dp</item>
+        <item name="android:paddingEnd">16dp</item>
+        <item name="android:textAppearance">@style/WidgetTextAppearance</item>
+    </style>
+
+    <style name="Widget.GlpmLocal.LabelTextView" parent="Widget.AppCompat.TextView">
+        <item name="android:gravity">center</item>
+        <item name="android:textAppearance">@style/LabelTextAppearance</item>
+    </style>
+
+    <style name="Widget.GlpmLocal.SquareImageButton" parent="Widget.AppCompat.ImageButton">
+        <item name="android:background">@drawable/vbg_imageview</item>
+    </style>
+
+    <style name="Widget.GlpmLocal.ModuleIcon" parent="Widget.AppCompat.ImageButton">
+        <item name="android:background">@drawable/vbg_module_icon</item>
+    </style>
+
 </resources>

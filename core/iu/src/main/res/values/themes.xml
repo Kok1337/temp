@@ -12,7 +12,9 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+
         <item name="android:buttonStyle">@style/Widget.GlpmLocal.Button</item>
+        <item name="android:textViewStyle">@style/Widget.GlpmLocal.LabelTextView</item>
     </style>
 
     <style name="Base.Theme.GlpmLocal" parent="Base.V23.Theme.GlpmLocal" />

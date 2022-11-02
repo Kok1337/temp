@@ -1,12 +1,18 @@
 package com.kok1337.feature_database_preparation.di.component
 
 import com.kok1337.feature_database_preparation.di.dep.DatabasePreparationDependencies
+import com.kok1337.feature_database_preparation.di.module.DatabasePreparationBindsModule
+import com.kok1337.feature_database_preparation.di.module.DatabasePreparationProvidesModule
 import com.kok1337.feature_database_preparation.di.scope.FeatureDatabasePreparation
 import com.kok1337.feature_database_preparation.presentation.fragment.DatabasePreparationFragment
 import dagger.Component
 
 @[FeatureDatabasePreparation Component(
     dependencies = [DatabasePreparationDependencies::class],
+    modules = [
+        DatabasePreparationBindsModule::class,
+        DatabasePreparationProvidesModule::class,
+    ]
 )]
 internal interface DatabasePreparationComponent {
     fun inject(databasePreparationFragment: DatabasePreparationFragment)
