@@ -4,5 +4,7 @@ import okhttp3.ResponseBody
 import retrofit2.Response
 
 interface FileRepository {
+    suspend fun getInstallerArchiveSize(): Long
+    suspend fun saveInstallerArchiveSize(installerArchiveSize: Long)
     suspend fun downloadInstallerArchive(): Response<ResponseBody>
 }

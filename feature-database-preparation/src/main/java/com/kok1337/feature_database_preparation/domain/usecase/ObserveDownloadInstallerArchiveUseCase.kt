@@ -19,6 +19,7 @@ class ObserveDownloadInstallerArchiveUseCase @Inject constructor(
         val responseBody = response.body() ?: throw FileDownloadException(installerArchiveFile.name)
         val fileSize = responseBody.contentLength()
         val inputStream = responseBody.byteStream()
+        fileRepository.saveInstallerArchiveSize(fileSize)
         saveFileWithDownloadResult(fileSize, inputStream, installerArchiveFile) { downloadResult ->
             emit(downloadResult)
         }

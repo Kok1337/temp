@@ -1,8 +1,11 @@
 package com.kok1337.feature_database_preparation.di.module
 
+import android.content.Context
+import android.content.pm.PackageManager
 import android.os.Environment
-import com.kok1337.feature_database_preparation.data.service.FileService
+import com.kok1337.feature_database_preparation.data.network.service.FileService
 import com.kok1337.feature_database_preparation.di.qualifier.InstallerEndpoint
+import com.kok1337.feature_database_preparation.di.qualifier.TermuxPackage
 import com.kok1337.feature_database_preparation.di.qualifier.UserJwtToken
 import dagger.Module
 import dagger.Provides
@@ -18,7 +21,8 @@ class DatabasePreparationProvidesModule {
 
     @[InstallerEndpoint Provides]
     fun provideInstallerEndpoint(): String {
-        return "/file/glpm_local.backup"
+//        return "/file/glpm_local.backup"
+        return "/file/zip"
     }
 
     @[UserJwtToken Provides]
@@ -29,6 +33,16 @@ class DatabasePreparationProvidesModule {
     @Provides
     fun provideInstallerArchiveFile(): File {
         val folder = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-        return File(folder, "glpm_local.backup")
+        return File(folder, "installer.zip")
+    }
+
+    @Provides
+    fun providePackageManager(context: Context): PackageManager {
+        return context.packageManager
+    }
+
+    @[TermuxPackage Provides]
+    fun provideTermuxPackage(): String {
+        return "com.termux"
     }
 }

@@ -1,4 +1,4 @@
-package com.kok1337.feature_database_preparation.data.service
+package com.kok1337.feature_database_preparation.data.network.service
 
 import okhttp3.ResponseBody
 import retrofit2.Response

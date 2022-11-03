@@ -1,10 +1,11 @@
 package com.kok1337.feature_database_preparation.presentation.fragment
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.kok1337.feature_database_preparation.domain.model.InstallerState
-import com.kok1337.feature_database_preparation.domain.usecase.GetInitialInstallerState
+import com.kok1337.feature_database_preparation.domain.usecase.GetInstallerState
 import com.kok1337.feature_database_preparation.domain.usecase.ObserveDownloadInstallerArchiveUseCase
 import com.kok1337.file.DownloadResult
 import com.kok1337.result.DataResult
@@ -17,7 +18,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 internal class DatabasePreparationViewModel(
-    private val getInitialInstallerState: GetInitialInstallerState,
+    private val getInstallerState: GetInstallerState,
     private val observeDownloadInstallerArchiveUseCase: ObserveDownloadInstallerArchiveUseCase,
 ) : ViewModel() {
 
@@ -30,9 +31,15 @@ internal class DatabasePreparationViewModel(
     val installerState = _installerState.asSharedFlow()
 
     init {
+        getInstallerState()
+
         viewModelScope.launch(Dispatchers.IO) {
-            _installerState.emit(getInitialInstallerState.invoke())
+            installerState.onEach { Log.e(javaClass.simpleName, it.name) }.collect()
         }
+    }
+
+    fun getInstallerState() = viewModelScope.launch(Dispatchers.IO) {
+        _installerState.emit(getInstallerState.invoke())
     }
 
     fun downloadInstaller(): Flow<DataResult<DownloadResult>> = flow {
@@ -51,14 +58,14 @@ internal class DatabasePreparationViewModel(
     }.flowOn(Dispatchers.IO)
 
     class Factory @Inject constructor(
-        private val getInitialInstallerState: GetInitialInstallerState,
+        private val getInstallerState: GetInstallerState,
         private val observeDownloadInstallerArchiveUseCase: ObserveDownloadInstallerArchiveUseCase,
     ) : ViewModelProvider.Factory {
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             require(modelClass == DatabasePreparationViewModel::class.java)
             return DatabasePreparationViewModel(
-                getInitialInstallerState = getInitialInstallerState,
+                getInstallerState = getInstallerState,
                 observeDownloadInstallerArchiveUseCase = observeDownloadInstallerArchiveUseCase,
             ) as T
         }
