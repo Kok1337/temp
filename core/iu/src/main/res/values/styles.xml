@@ -21,12 +21,71 @@
         <item name="android:textAppearance">@style/LabelTextAppearance</item>
     </style>
 
-    <style name="Widget.GlpmLocal.SquareImageButton" parent="Widget.AppCompat.ImageButton">
-        <item name="android:background">@drawable/vbg_imageview</item>
+    <style name="Widget.GlpmLocal.Base.ImageButton" parent="Widget.AppCompat.ImageButton">
+        <item name="android:tint">@color/click_icon_tint</item>
+        <item name="android:focusable">true</item>
+        <item name="android:clickable">true</item>
+        <item name="android:padding">5dp</item>
     </style>
 
-    <style name="Widget.GlpmLocal.ModuleIcon" parent="Widget.AppCompat.ImageButton">
+    <style name="Widget.GlpmLocal.SquareImageButton" parent="Widget.GlpmLocal.Base.ImageButton">
+        <item name="android:background">@drawable/vbg_button_square</item>
+    </style>
+
+    <style name="Widget.GlpmLocal.CircleImageButton" parent="Widget.GlpmLocal.Base.ImageButton">
+        <item name="android:background">@drawable/vbg_button_circle</item>
+    </style>
+
+    <style name="Widget.GlpmLocal.ModuleIcon" parent="Widget.GlpmLocal.Base.ImageButton">
         <item name="android:background">@drawable/vbg_module_icon</item>
     </style>
 
+    <style name="Widget.GlpmLocal.Spinner" parent="Widget.AppCompat.TextView">
+        <item name="android:background">@drawable/vbg_spinner</item>
+        <item name="android:gravity">center</item>
+        <item name="android:paddingStart">16dp</item>
+        <item name="android:paddingEnd">16dp</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:textAppearance">@style/WidgetTextAppearance</item>
+    </style>
+
+    <style name="Widget.GlpmLocal.Title" parent="Widget.AppCompat.TextView">
+        <item name="android:textAppearance">@style/TitleTextAppearance</item>
+        <item name="android:layout_gravity">center</item>
+    </style>
+
+    <style name="Widget.GlpmLocal.SearchView" parent="Widget.AppCompat.SearchView">
+        <item name="android:background">@drawable/vbg_search_view</item>
+        <item name="android:editTextColor">@color/text</item>
+        <item name="android:iconifiedByDefault">false</item>
+        <item name="android:queryBackground">@drawable/vbg_invisible</item>
+        <item name="android:textAppearance">@style/WidgetTextAppearance</item>
+    </style>
+
+    <style name="ColumnSeparator">
+        <item name="android:layout_height">0dp</item>
+        <item name="android:layout_width">8dp</item>
+    </style>
+
+    <style name="RowSeparator">
+        <item name="android:layout_height">8dp</item>
+        <item name="android:layout_width">0dp</item>
+    </style>
+
+    <style name="Widget.GlpmLocal.EditText" parent="Widget.AppCompat.EditText">
+        <item name="android:background">@drawable/vbg_edit_text</item>
+        <item name="android:gravity">center</item>
+        <item name="android:paddingStart">16dp</item>
+        <item name="android:paddingEnd">16dp</item>
+        <item name="android:textAppearance">@style/WidgetTextAppearance</item>
+    </style>
+
+    <style name="Widget.GlpmLocal.HorizontalProgressBar" parent="Widget.AppCompat.ProgressBar.Horizontal">
+        <item name="android:progressDrawable">@drawable/vbg_progress_bar</item>
+        <item name="android:progress">0</item>
+        <item name="android:max">100</item>
+    </style>
 </resources>

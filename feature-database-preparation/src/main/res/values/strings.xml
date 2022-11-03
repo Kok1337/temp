@@ -1,1 +1,8 @@
-<resources></resources>
+<resources>
+    <string name="installer_label">Установщик</string>
+    <string name="status">Status</string>
+    <string name="result">Результат</string>
+    <string name="termux_label">Termux</string>
+    <string name="content">content</string>
+    <string name="user_label">Пользователь</string>
+</resources>

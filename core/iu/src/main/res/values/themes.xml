@@ -15,6 +15,8 @@
 
         <item name="android:buttonStyle">@style/Widget.GlpmLocal.Button</item>
         <item name="android:textViewStyle">@style/Widget.GlpmLocal.LabelTextView</item>
+        <item name="android:editTextStyle">@style/Widget.GlpmLocal.EditText</item>
+        <item name="android:searchViewStyle">@style/Widget.GlpmLocal.SearchView</item>
     </style>
 
     <style name="Base.Theme.GlpmLocal" parent="Base.V23.Theme.GlpmLocal" />

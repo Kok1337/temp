@@ -9,49 +9,218 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/message"
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/iconBarrier"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="DatabasePreparationFragment"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <Button
-            android:id="@+id/button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Button"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/result"
-            style="@style/Widget.GlpmLocal.LabelTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="TextView"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/button" />
-
-        <TextView
-            android:id="@+id/status"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="TextView"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/result" />
+            app:barrierDirection="end"
+            app:barrierMargin="8dp"
+            app:constraint_referenced_ids="installerIcon, termuxIcon, userIcon" />
 
         <ImageButton
-            android:id="@+id/imageButton"
+            android:id="@+id/installerIcon"
             style="@style/Widget.GlpmLocal.ModuleIcon"
             android:layout_width="64dp"
             android:layout_height="64dp"
-            android:src="@android:drawable/ic_dialog_email"
+            android:contentDescription="@string/content"
+            android:src="@drawable/ic_install_mobile"
+            app:layout_constraintBottom_toTopOf="@+id/termuxIcon"
+            app:layout_constraintEnd_toStartOf="@id/iconBarrier"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/installerLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/installerIcon"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/iconBarrier"
+            app:layout_constraintTop_toTopOf="@id/installerIcon">
+
+            <TextView
+                android:id="@+id/installerLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/installer_label"
+                android:textSize="@dimen/big_text_size"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/installerStatusTextView"
+                style="@style/Widget.GlpmLocal.TextView"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_marginEnd="8dp"
+                android:text="@string/status"
+                app:layout_constraintEnd_toStartOf="@id/downloadInstallerButton"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/installerLabel"
+                app:layout_goneMarginEnd="0dp" />
+
+            <ImageButton
+                android:id="@+id/downloadInstallerButton"
+                style="@style/Widget.GlpmLocal.SquareImageButton"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:contentDescription="@string/content"
+                android:src="@drawable/ic_restart"
+                app:layout_constraintBottom_toBottomOf="@id/installerStatusTextView"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/installerStatusTextView" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <ProgressBar
+            android:id="@+id/downloadInstallerProgressBar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:max="100"
+            android:progress="0"
+            android:progressDrawable="@drawable/vbg_progress_bar"
+            app:layout_constraintBottom_toBottomOf="@id/downloadInstallerStatusText"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/installerLayout"
+            app:layout_constraintTop_toBottomOf="@id/installerLayout" />
+
+        <TextView
+            android:id="@+id/downloadInstallerStatusText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/result"
+            app:layout_constraintEnd_toEndOf="@+id/downloadInstallerProgressBar"
+            app:layout_constraintStart_toStartOf="@id/downloadInstallerProgressBar"
+            app:layout_constraintTop_toBottomOf="@id/installerLayout" />
+
+
+        <ImageView
+            android:id="@+id/termuxIcon"
+            style="@style/Widget.GlpmLocal.ModuleIcon"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:contentDescription="@string/content"
+            android:src="@drawable/ic_termux"
+            app:layout_constraintBottom_toTopOf="@+id/userIcon"
+            app:layout_constraintEnd_toStartOf="@id/iconBarrier"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/installerIcon" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/termuxLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/termuxIcon"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/iconBarrier"
+            app:layout_constraintTop_toTopOf="@id/termuxIcon">
+
+            <TextView
+                android:id="@+id/termuxLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/termux_label"
+                android:textSize="@dimen/big_text_size"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/termuxStatusTextView"
+                style="@style/Widget.GlpmLocal.TextView"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_marginEnd="8dp"
+                android:text="@string/status"
+                app:layout_constraintEnd_toStartOf="@id/reinstallTermuxButton"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/termuxLabel"
+                app:layout_goneMarginEnd="0dp" />
+
+            <ImageView
+                android:id="@+id/reinstallTermuxButton"
+                style="@style/Widget.GlpmLocal.SquareImageButton"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:contentDescription="@string/content"
+                android:src="@drawable/ic_restart"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="@id/termuxStatusTextView"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/termuxStatusTextView" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <ImageView
+            android:id="@+id/userIcon"
+            style="@style/Widget.GlpmLocal.ModuleIcon"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:contentDescription="@string/content"
+            android:src="@drawable/ic_person"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toStartOf="@id/iconBarrier"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/termuxIcon" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/userLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/userIcon"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/iconBarrier"
+            app:layout_constraintTop_toTopOf="@id/userIcon">
+
+            <TextView
+                android:id="@+id/userText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/user_label"
+                android:textSize="@dimen/big_text_size"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/userStatusTextView"
+                style="@style/Widget.GlpmLocal.TextView"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_marginEnd="8dp"
+                android:text="@string/status"
+                app:layout_constraintEnd_toStartOf="@id/userButtonLayout"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/userText"
+                app:layout_goneMarginEnd="0dp" />
+
+            <LinearLayout
+                android:id="@+id/userButtonLayout"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toBottomOf="@id/userStatusTextView"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/userStatusTextView">
+
+                <ImageView
+                    android:id="@+id/loginButton"
+                    style="@style/Widget.GlpmLocal.SquareImageButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:contentDescription="@string/content"
+                    android:src="@drawable/ic_login" />
+
+                <ImageView
+                    android:id="@+id/logoutButton"
+                    style="@style/Widget.GlpmLocal.SquareImageButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:contentDescription="@string/content"
+                    android:src="@drawable/ic_logout" />
+            </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </layout>
