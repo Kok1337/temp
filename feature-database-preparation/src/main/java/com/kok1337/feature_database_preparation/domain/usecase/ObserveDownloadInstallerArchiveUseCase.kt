@@ -1,5 +1,6 @@
 package com.kok1337.feature_database_preparation.domain.usecase
 
+import com.kok1337.feature_database_preparation.di.qualifier.InstallerArchive
 import com.kok1337.feature_database_preparation.domain.exception.FileDownloadException
 import com.kok1337.feature_database_preparation.domain.repository.FileRepository
 import com.kok1337.file.DownloadResult
@@ -10,7 +11,7 @@ import java.io.File
 import javax.inject.Inject
 
 class ObserveDownloadInstallerArchiveUseCase @Inject constructor(
-    private val installerArchiveFile: File,
+    @InstallerArchive private val installerArchiveFile: File,
     private val fileRepository: FileRepository,
 ) {
     suspend fun invoke(): Flow<DownloadResult> = flow {

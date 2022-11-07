@@ -11,8 +11,12 @@ import androidx.lifecycle.lifecycleScope
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.kok1337.feature_database_preparation.R
 import com.kok1337.feature_database_preparation.databinding.FragmentDatabasePreparationBinding
+import com.kok1337.feature_database_preparation.domain.model.CopyResult
 import com.kok1337.feature_database_preparation.domain.model.InstallerState
 import com.kok1337.feature_database_preparation.domain.model.InstallerState.*
+import com.kok1337.feature_database_preparation.domain.model.TermuxState
+import com.kok1337.feature_database_preparation.domain.model.TermuxState.*
+import com.kok1337.feature_database_preparation.domain.usecase.ObserveCopyFilesFromInstallerArchiveUseCase
 import com.kok1337.file.DownloadResult
 import com.kok1337.result.ErrorResult
 import com.kok1337.result.SuccessResult
@@ -39,7 +43,7 @@ class DatabasePreparationFragment : Fragment(R.layout.fragment_database_preparat
     }
 
     override fun onResume() {
-        fragmentViewModel.getInstallerState()
+        fragmentViewModel.updateAllStates()
         super.onResume()
     }
 
@@ -50,6 +54,30 @@ class DatabasePreparationFragment : Fragment(R.layout.fragment_database_preparat
         lifecycleScope.launchWhenStarted {
             fragmentViewModel.installerState
                 .onEach { onInstallerStateChanged(it) }
+                .collect()
+        }
+
+        lifecycleScope.launchWhenStarted {
+            fragmentViewModel.termuxState
+                .onEach { onTermuxStateChanged(it) }
+                .collect()
+        }
+
+        lifecycleScope.launchWhenStarted {
+            fragmentViewModel.installerDownloadResult
+                .onEach { result ->
+                    when (result) {
+                        is ErrorResult -> showErrorToast()
+                        is SuccessResult -> updateInstallerIndicator(result.takeSuccess()!!)
+                        else -> {}
+                    }
+                }
+                .collect()
+        }
+
+        lifecycleScope.launchWhenStarted {
+            fragmentViewModel.copyFileResult
+                .onEach { updateCopyFileIndicator(it) }
                 .collect()
         }
     }
@@ -66,6 +94,17 @@ class DatabasePreparationFragment : Fragment(R.layout.fragment_database_preparat
             if (field) showDownloadInstallerButton() else hideDownloadInstallerButton()
         }
 
+    private var showCopyFileIndicator: Boolean = false
+        set(value) {
+            field = value
+            if (field) showCopyFileIndicator() else hideCopyFileIndicator()
+        }
+
+    private fun onTermuxStateChanged(termuxState: TermuxState) {
+        updateTermuxStatus(termuxState)
+        updateUI(termuxState)
+    }
+
     private fun onInstallerStateChanged(installerState: InstallerState) {
         updateInstallerStatus(installerState)
         updateUI(installerState)
@@ -81,6 +120,19 @@ class DatabasePreparationFragment : Fragment(R.layout.fragment_database_preparat
         }
     }
 
+    private fun updateTermuxStatus(termuxState: TermuxState) {
+        binding.termuxStatusTextView.text = when(termuxState) {
+            NOT_INSTALLED -> "Не установлен"
+            COPYING_FILES_STARTED -> "Копируются файлы"
+            FILES_COPIED -> "Файлы скопированы"
+            INSTALLATION_STARTED -> "Установка"
+            INSTALLED -> "Установлено"
+            DELETION_STARTED -> "Удаление"
+            WORKS_CORRECTLY -> "Работает корректно"
+            NOT_WORKS_CORRECTLY -> "Работает некорректно"
+        }
+    }
+
     private fun updateUI(installerState: InstallerState) {
         showInstallerIndicator = when (installerState) {
             DOWNLOAD_IS_IN_PROGRESS -> true
@@ -88,6 +140,13 @@ class DatabasePreparationFragment : Fragment(R.layout.fragment_database_preparat
         }
         showDownloadInstallerButton = when (installerState) {
             NOT_DOWNLOADED, DOWNLOAD_ERROR -> true
+            else -> false
+        }
+    }
+
+    private fun updateUI(termuxState: TermuxState) {
+        showCopyFileIndicator = when(termuxState) {
+            COPYING_FILES_STARTED -> true
             else -> false
         }
     }
@@ -110,7 +169,9 @@ class DatabasePreparationFragment : Fragment(R.layout.fragment_database_preparat
         binding.downloadInstallerButton.visibility = View.GONE
     }
 
-    private fun tryDownloadInstallerArchive() = lifecycleScope.launchWhenStarted {
+    private fun tryDownloadInstallerArchive() = fragmentViewModel.downloadInstaller()
+
+/*    private fun tryDownloadInstallerArchive() = lifecycleScope.launchWhenStarted {
         fragmentViewModel.downloadInstaller()
             .onEach { result ->
                 when (result) {
@@ -120,11 +181,26 @@ class DatabasePreparationFragment : Fragment(R.layout.fragment_database_preparat
                 }
             }
             .collect()
+    }*/
+
+    private fun showCopyFileIndicator() {
+        binding.termuxCopiedFileText.visibility = View.VISIBLE
+        binding.termuxCopiedFileProgressBar.visibility = View.VISIBLE
+    }
+
+    private fun hideCopyFileIndicator() {
+        binding.termuxCopiedFileText.visibility = View.GONE
+        binding.termuxCopiedFileProgressBar.visibility = View.GONE
     }
 
     private fun updateInstallerIndicator(downloadResult: DownloadResult) {
         binding.downloadInstallerStatusText.text = downloadResult.toString()
         binding.downloadInstallerProgressBar.progress = downloadResult.savedProgress
+    }
+
+    private fun updateCopyFileIndicator(copyResult: CopyResult) {
+        binding.termuxCopiedFileText.text = copyResult.fileName
+        binding.termuxCopiedFileProgressBar.progress = copyResult.percent
     }
 
     private fun showErrorToast() {

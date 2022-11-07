@@ -38,7 +38,7 @@ class DatabaseModule {
         @DbPassword password: String,
         @DbDriverName driverName: String
     ): DataSource {
-        val url = "jdbc:postgresql://${host}:$port}/${name}"
+        val url = "jdbc:postgresql://${host}:${port}/${name}"
         val dataSource = DriverManagerDataSource(url, username, password)
         dataSource.setDriverClassName(driverName)
         return dataSource

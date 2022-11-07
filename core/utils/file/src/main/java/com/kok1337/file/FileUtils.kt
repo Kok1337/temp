@@ -15,12 +15,16 @@ class DownloadResult(private val savedSize: Long, private val fileSize: Long) {
         return DecimalFormat("#,##0.#").format(fileSize / 1024.0.pow(digitGroups.toDouble())) + " " + units[digitGroups]
     }
 
-    val savedProgress get() = (savedSize * 100 / fileSize).toInt()
+    val savedProgress get() = if(fileSize == 0L) 0 else (savedSize * 100 / fileSize).toInt()
 
     override fun toString(): String {
         val convertedSavedSize = convertFileSizeToString(savedSize)
         val convertedFileSize = convertFileSizeToString(fileSize)
         return "$convertedSavedSize / $convertedFileSize"
+    }
+
+    companion object {
+        val default = DownloadResult(0, 0)
     }
 }
 

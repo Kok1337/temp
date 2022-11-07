@@ -144,12 +144,33 @@
                 android:layout_height="48dp"
                 android:contentDescription="@string/content"
                 android:src="@drawable/ic_restart"
-                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="@id/termuxStatusTextView"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@id/termuxStatusTextView" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <ProgressBar
+            android:id="@+id/termuxCopiedFileProgressBar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:max="100"
+            android:progress="0"
+            android:progressDrawable="@drawable/vbg_progress_bar"
+            app:layout_constraintBottom_toBottomOf="@id/termuxCopiedFileText"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/termuxLayout"
+            app:layout_constraintTop_toBottomOf="@id/termuxLayout" />
+
+        <TextView
+            android:id="@+id/termuxCopiedFileText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/result"
+            app:layout_constraintEnd_toEndOf="@+id/downloadInstallerProgressBar"
+            app:layout_constraintStart_toStartOf="@id/downloadInstallerProgressBar"
+            app:layout_constraintTop_toBottomOf="@id/termuxLayout" />
 
         <ImageView
             android:id="@+id/userIcon"
