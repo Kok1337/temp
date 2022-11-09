@@ -16,7 +16,6 @@ import com.kok1337.feature_database_preparation.domain.model.InstallerState
 import com.kok1337.feature_database_preparation.domain.model.InstallerState.*
 import com.kok1337.feature_database_preparation.domain.model.TermuxState
 import com.kok1337.feature_database_preparation.domain.model.TermuxState.*
-import com.kok1337.feature_database_preparation.domain.usecase.ObserveCopyFilesFromInstallerArchiveUseCase
 import com.kok1337.file.DownloadResult
 import com.kok1337.result.ErrorResult
 import com.kok1337.result.SuccessResult
@@ -49,7 +48,8 @@ class DatabasePreparationFragment : Fragment(R.layout.fragment_database_preparat
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.downloadInstallerButton.setOnClickListener { tryDownloadInstallerArchive() }
+        binding.downloadInstallerButton.setOnClickListener { fragmentViewModel.downloadInstaller() }
+        binding.reinstallTermuxButton.setOnClickListener { fragmentViewModel.deleteTermux() }
 
         lifecycleScope.launchWhenStarted {
             fragmentViewModel.installerState
@@ -85,19 +85,31 @@ class DatabasePreparationFragment : Fragment(R.layout.fragment_database_preparat
     private var showInstallerIndicator: Boolean = false
         set(value) {
             field = value
-            if (field) showInstallerIndicator() else hideInstallerIndicator()
+            val visibility = if (field) View.VISIBLE else View.GONE
+            binding.downloadInstallerProgressBar.visibility = visibility
+            binding.downloadInstallerStatusText.visibility = visibility
         }
 
     private var showDownloadInstallerButton: Boolean = false
         set(value) {
             field = value
-            if (field) showDownloadInstallerButton() else hideDownloadInstallerButton()
+            val visibility = if (field) View.VISIBLE else View.GONE
+            binding.downloadInstallerButton.visibility = visibility
         }
 
     private var showCopyFileIndicator: Boolean = false
         set(value) {
             field = value
-            if (field) showCopyFileIndicator() else hideCopyFileIndicator()
+            val visibility = if (field) View.VISIBLE else View.GONE
+            binding.termuxCopiedFileText.visibility = visibility
+            binding.termuxCopiedFileProgressBar.visibility = visibility
+        }
+
+    private var showReinstallTermuxButton: Boolean = false
+        set(value) {
+            field = value
+            val visibility = if (field) View.VISIBLE else View.GONE
+            binding.reinstallTermuxButton.visibility = visibility
         }
 
     private fun onTermuxStateChanged(termuxState: TermuxState) {
@@ -149,48 +161,10 @@ class DatabasePreparationFragment : Fragment(R.layout.fragment_database_preparat
             COPYING_FILES_STARTED -> true
             else -> false
         }
-    }
-
-    private fun showInstallerIndicator() {
-        binding.downloadInstallerProgressBar.visibility = View.VISIBLE
-        binding.downloadInstallerStatusText.visibility = View.VISIBLE
-    }
-
-    private fun hideInstallerIndicator() {
-        binding.downloadInstallerProgressBar.visibility = View.GONE
-        binding.downloadInstallerStatusText.visibility = View.GONE
-    }
-
-    private fun showDownloadInstallerButton() {
-        binding.downloadInstallerButton.visibility = View.VISIBLE
-    }
-
-    private fun hideDownloadInstallerButton() {
-        binding.downloadInstallerButton.visibility = View.GONE
-    }
-
-    private fun tryDownloadInstallerArchive() = fragmentViewModel.downloadInstaller()
-
-/*    private fun tryDownloadInstallerArchive() = lifecycleScope.launchWhenStarted {
-        fragmentViewModel.downloadInstaller()
-            .onEach { result ->
-                when (result) {
-                    is ErrorResult -> showErrorToast()
-                    is SuccessResult -> updateInstallerIndicator(result.takeSuccess()!!)
-                    else -> {}
-                }
-            }
-            .collect()
-    }*/
-
-    private fun showCopyFileIndicator() {
-        binding.termuxCopiedFileText.visibility = View.VISIBLE
-        binding.termuxCopiedFileProgressBar.visibility = View.VISIBLE
-    }
-
-    private fun hideCopyFileIndicator() {
-        binding.termuxCopiedFileText.visibility = View.GONE
-        binding.termuxCopiedFileProgressBar.visibility = View.GONE
+        showReinstallTermuxButton = when(termuxState) {
+            NOT_WORKS_CORRECTLY -> true
+            else -> false
+        }
     }
 
     private fun updateInstallerIndicator(downloadResult: DownloadResult) {

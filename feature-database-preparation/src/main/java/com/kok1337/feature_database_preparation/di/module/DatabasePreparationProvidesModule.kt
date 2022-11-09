@@ -4,11 +4,8 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Environment
 import com.kok1337.feature_database_preparation.data.network.service.FileService
+import com.kok1337.feature_database_preparation.di.dep.DatabasePreparationDependencies
 import com.kok1337.feature_database_preparation.di.qualifier.*
-import com.kok1337.feature_database_preparation.di.qualifier.InstallerArchive
-import com.kok1337.feature_database_preparation.di.qualifier.InstallerEndpoint
-import com.kok1337.feature_database_preparation.di.qualifier.TermuxPackage
-import com.kok1337.feature_database_preparation.di.qualifier.UserJwtToken
 import dagger.Module
 import dagger.Provides
 import retrofit2.Retrofit
@@ -21,9 +18,13 @@ class DatabasePreparationProvidesModule {
         return retrofit.create(FileService::class.java)
     }
 
+    @[ApplicationId Provides]
+    fun provideApplicationId(databasePreparationDependencies: DatabasePreparationDependencies): String {
+        return databasePreparationDependencies.applicationId
+    }
+
     @[InstallerEndpoint Provides]
     fun provideInstallerEndpoint(): String {
-//        return "/file/glpm_local.backup"
         return "/file/zip"
     }
 
@@ -51,6 +52,11 @@ class DatabasePreparationProvidesModule {
     @Provides
     fun providePackageManager(context: Context): PackageManager {
         return context.packageManager
+    }
+
+    @[ProviderPath Provides]
+    fun provideProviderPath(): String {
+        return ".provider"
     }
 
     @[TermuxPackage Provides]

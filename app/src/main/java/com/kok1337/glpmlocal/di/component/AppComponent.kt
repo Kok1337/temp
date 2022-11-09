@@ -1,7 +1,6 @@
 package com.kok1337.glpmlocal.di.component
 
 import android.content.Context
-import com.kok1337.feature_database_preparation.di.dep.DatabasePreparationDependencies
 import com.kok1337.glpmlocal.presentation.activity.MainActivity
 import com.kok1337.glpmlocal.di.scope.App
 import dagger.BindsInstance
@@ -10,7 +9,11 @@ import org.springframework.jdbc.core.JdbcTemplate
 import retrofit2.Retrofit
 
 @[App Component]
-interface AppComponent : DatabasePreparationDependencies {
+interface AppComponent {
+    val context: Context
+    val jdbcTemplate: JdbcTemplate
+    val retrofit: Retrofit
+
     @Component.Builder
     interface Builder {
         @BindsInstance

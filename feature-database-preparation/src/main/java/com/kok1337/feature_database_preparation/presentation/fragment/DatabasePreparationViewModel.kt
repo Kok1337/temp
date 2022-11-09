@@ -8,10 +8,7 @@ import com.kok1337.feature_database_preparation.domain.model.CopyResult
 import com.kok1337.feature_database_preparation.domain.model.InstallerState
 import com.kok1337.feature_database_preparation.domain.model.InstallerState.*
 import com.kok1337.feature_database_preparation.domain.model.TermuxState
-import com.kok1337.feature_database_preparation.domain.usecase.GetInstallerStateUseCase
-import com.kok1337.feature_database_preparation.domain.usecase.GetTermuxStateUseCase
-import com.kok1337.feature_database_preparation.domain.usecase.ObserveCopyFilesFromInstallerArchiveUseCase
-import com.kok1337.feature_database_preparation.domain.usecase.ObserveDownloadInstallerArchiveUseCase
+import com.kok1337.feature_database_preparation.domain.usecase.*
 import com.kok1337.file.DownloadResult
 import com.kok1337.result.DataResult
 import com.kok1337.result.ErrorResult
@@ -25,8 +22,11 @@ import javax.inject.Inject
 internal class DatabasePreparationViewModel(
     private val getInstallerStateUseCase: GetInstallerStateUseCase,
     private val getTermuxStateUseCase: GetTermuxStateUseCase,
-    private val observeCopyFilesFromInstallerArchiveUseCase: ObserveCopyFilesFromInstallerArchiveUseCase,
     private val observeDownloadInstallerArchiveUseCase: ObserveDownloadInstallerArchiveUseCase,
+    private val observeCopyFilesFromInstallerArchiveUseCase: ObserveCopyFilesFromInstallerArchiveUseCase,
+    private val installTermuxUseCase: InstallTermuxUseCase,
+    private val deleteCopiedFilesUseCase: DeleteCopiedFilesUseCase,
+    private val deleteTermuxUseCase: DeleteTermuxUseCase,
 ) : ViewModel() {
     companion object {
         private val LOG_TAG = DatabasePreparationViewModel::class.java.simpleName
@@ -54,14 +54,15 @@ internal class DatabasePreparationViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             installerState.onEach { installerState ->
                 Log.e(LOG_TAG, installerState.name)
-                if (installerState == NOT_DOWNLOADED) {
-                    downloadInstaller()
-                    return@onEach
-                }
-                val termuxState = termuxState.first()
-                if (installerState == DOWNLOADED && termuxState == TermuxState.NOT_INSTALLED) {
-                    Log.e(LOG_TAG, "start copy files")
-                    copyInstallerFiles()
+                when (installerState) {
+                    NOT_DOWNLOADED -> downloadInstaller()
+                    DOWNLOADED -> {
+                        val termuxState = termuxState.first()
+                        if (termuxState != TermuxState.NOT_INSTALLED) return@onEach
+                        Log.e(LOG_TAG, "start copy files")
+                        copyInstallerFiles()
+                    }
+                    else -> {}
                 }
             }.collect()
         }
@@ -69,6 +70,11 @@ internal class DatabasePreparationViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             termuxState.onEach { termuxState ->
                 Log.e(LOG_TAG, termuxState.name)
+                when (termuxState) {
+                    TermuxState.FILES_COPIED -> installTermux()
+                    TermuxState.WORKS_CORRECTLY, TermuxState.NOT_WORKS_CORRECTLY -> deleteCopiedFiles()
+                    else -> {}
+                }
             }.collect()
         }
     }
@@ -93,6 +99,10 @@ internal class DatabasePreparationViewModel(
         _termuxState.emit(getTermuxStateUseCase.invoke())
     }
 
+    private fun deleteCopiedFiles() = viewModelScope.launch(Dispatchers.IO) {
+        deleteCopiedFilesUseCase.invoke()
+    }
+
     fun downloadInstaller() = viewModelScope.launch(Dispatchers.IO) {
         _installerState.emit(DOWNLOAD_IS_IN_PROGRESS)
         try {
@@ -110,7 +120,7 @@ internal class DatabasePreparationViewModel(
         _installerState.emit(DOWNLOADED)
     }
 
-    fun copyInstallerFiles() = viewModelScope.launch(Dispatchers.IO) {
+    private fun copyInstallerFiles() = viewModelScope.launch(Dispatchers.IO) {
         _termuxState.emit(TermuxState.COPYING_FILES_STARTED)
         observeCopyFilesFromInstallerArchiveUseCase.invoke()
             .onEach { _copyFileResult.emit(it) }
@@ -118,11 +128,24 @@ internal class DatabasePreparationViewModel(
         _termuxState.emit(TermuxState.FILES_COPIED)
     }
 
+    fun deleteTermux() = viewModelScope.launch(Dispatchers.IO) {
+        _termuxState.emit(TermuxState.DELETION_STARTED)
+        deleteTermuxUseCase.invoke()
+    }
+
+    private fun installTermux() = viewModelScope.launch(Dispatchers.IO) {
+        _termuxState.emit(TermuxState.INSTALLATION_STARTED)
+        installTermuxUseCase.invoke()
+    }
+
     class Factory @Inject constructor(
         private val getInstallerStateUseCase: GetInstallerStateUseCase,
         private val getTermuxStateUseCase: GetTermuxStateUseCase,
-        private val observeCopyFilesFromInstallerArchiveUseCase: ObserveCopyFilesFromInstallerArchiveUseCase,
         private val observeDownloadInstallerArchiveUseCase: ObserveDownloadInstallerArchiveUseCase,
+        private val observeCopyFilesFromInstallerArchiveUseCase: ObserveCopyFilesFromInstallerArchiveUseCase,
+        private val installTermuxUseCase: InstallTermuxUseCase,
+        private val deleteCopiedFilesUseCase: DeleteCopiedFilesUseCase,
+        private val deleteTermuxUseCase: DeleteTermuxUseCase,
     ) : ViewModelProvider.Factory {
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
@@ -130,8 +153,11 @@ internal class DatabasePreparationViewModel(
             return DatabasePreparationViewModel(
                 getInstallerStateUseCase = getInstallerStateUseCase,
                 getTermuxStateUseCase = getTermuxStateUseCase,
-                observeCopyFilesFromInstallerArchiveUseCase = observeCopyFilesFromInstallerArchiveUseCase,
                 observeDownloadInstallerArchiveUseCase = observeDownloadInstallerArchiveUseCase,
+                observeCopyFilesFromInstallerArchiveUseCase = observeCopyFilesFromInstallerArchiveUseCase,
+                installTermuxUseCase = installTermuxUseCase,
+                deleteCopiedFilesUseCase = deleteCopiedFilesUseCase,
+                deleteTermuxUseCase = deleteTermuxUseCase,
             ) as T
         }
     }

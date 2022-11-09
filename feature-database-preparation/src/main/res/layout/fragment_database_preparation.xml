@@ -168,8 +168,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/result"
-            app:layout_constraintEnd_toEndOf="@+id/downloadInstallerProgressBar"
-            app:layout_constraintStart_toStartOf="@id/downloadInstallerProgressBar"
+            app:layout_constraintEnd_toEndOf="@+id/termuxCopiedFileProgressBar"
+            app:layout_constraintStart_toStartOf="@id/termuxCopiedFileProgressBar"
             app:layout_constraintTop_toBottomOf="@id/termuxLayout" />
 
         <ImageView

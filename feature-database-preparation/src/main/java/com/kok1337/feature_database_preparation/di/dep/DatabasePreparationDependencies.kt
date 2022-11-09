@@ -8,4 +8,5 @@ interface DatabasePreparationDependencies {
     val context: Context
     val jdbcTemplate: JdbcTemplate
     val retrofit: Retrofit
+    val applicationId: String
 }

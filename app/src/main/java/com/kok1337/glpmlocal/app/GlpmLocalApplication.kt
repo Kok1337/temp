@@ -1,15 +1,19 @@
 package com.kok1337.glpmlocal.app
 
 import android.app.Application
+import android.content.Context
 import com.kok1337.database.di.component.DaggerDatabaseComponent
 import com.kok1337.database.di.dep.DatabaseDependencies
 import com.kok1337.feature_database_preparation.di.dep.DatabasePreparationDependencies
 import com.kok1337.feature_database_preparation.di.dep.DatabasePreparationDependenciesStore
+import com.kok1337.glpmlocal.BuildConfig
 import com.kok1337.glpmlocal.di.component.AppComponent
 import com.kok1337.glpmlocal.di.component.DaggerAppComponent
 import com.kok1337.network.di.component.DaggerNetworkComponent
 import com.kok1337.network.di.dep.NetworkDependencies
 import okhttp3.Cache
+import org.springframework.jdbc.core.JdbcTemplate
+import retrofit2.Retrofit
 import java.util.*
 
 class GlpmLocalApplication : Application() {
@@ -48,7 +52,8 @@ class GlpmLocalApplication : Application() {
             .retrofit(networkComponent.retrofit)
             .build()
 
-        DatabasePreparationDependenciesStore.deps = appComponent
+        DatabasePreparationDependenciesStore.deps =
+            DatabasePreparationDependenciesImpl(appComponent)
     }
 
     private fun property(key: String): String {
@@ -71,5 +76,14 @@ class GlpmLocalApplication : Application() {
         private val maxCacheSizeInMb: Long get() = property(NET_CACHE_SIZE).toLong() * 1024 * 1024
         override val baseUrl: String get() = property(NET_BASE_URL)
         override val cache: Cache get() = Cache(cacheDir, maxCacheSizeInMb)
+    }
+
+    inner class DatabasePreparationDependenciesImpl(
+        private val component: AppComponent,
+    ) : DatabasePreparationDependencies {
+        override val context: Context get() = component.context
+        override val jdbcTemplate: JdbcTemplate get() = component.jdbcTemplate
+        override val retrofit: Retrofit get() = component.retrofit
+        override val applicationId: String get() = BuildConfig.APPLICATION_ID
     }
 }
