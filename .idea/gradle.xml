@@ -20,6 +20,7 @@
             <option value="$PROJECT_DIR$/core/utils" />
             <option value="$PROJECT_DIR$/core/utils/file" />
             <option value="$PROJECT_DIR$/feature-database-preparation" />
+            <option value="$PROJECT_DIR$/feature-database-synchronization" />
           </set>
         </option>
       </GradleProjectSettings>

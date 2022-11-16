@@ -6,6 +6,7 @@
       <module name="GlpmLocal.app" target="11" />
       <module name="GlpmLocal.core.iu" target="11" />
       <module name="GlpmLocal.feature-database-preparation" target="11" />
+      <module name="GlpmLocal.feature-database-synchronization" target="11" />
     </bytecodeTargetLevel>
   </component>
 </project>
