@@ -8,7 +8,11 @@
     <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
         tools:ignore="ScopedStorage" />
 
+    <uses-permission android:name="com.termux.permission.RUN_COMMAND"/>
+
     <application
+        android:largeHeap="true"
+        android:hardwareAccelerated="false"
         android:theme="@style/Theme.GlpmLocal">
 
         <provider

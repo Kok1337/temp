@@ -53,6 +53,7 @@ dependencies {
     implementation project(path: ':core:database')
     implementation project(path: ':core:network')
     implementation project(path: ':feature-database-preparation')
+    implementation project(path: ':feature-database-synchronization')
 
     // Dagger
     implementation "com.google.dagger:dagger:$dagger"

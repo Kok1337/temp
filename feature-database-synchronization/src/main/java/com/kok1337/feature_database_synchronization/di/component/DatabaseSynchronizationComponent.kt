@@ -1,17 +1,17 @@
 package com.kok1337.feature_database_synchronization.di.component
 
-import com.kok1337.feature_database_synchronization.di.module.DatabasePreparationBindsModule
-import com.kok1337.feature_database_synchronization.di.module.DatabasePreparationProvidesModule
 import com.kok1337.feature_database_synchronization.di.scope.FeatureDatabaseSynchronization
 import com.kok1337.feature_database_synchronization.di.dep.DatabaseSynchronizationDependencies
+import com.kok1337.feature_database_synchronization.di.module.DatabaseSynchronizationBindsModule
+import com.kok1337.feature_database_synchronization.di.module.DatabaseSynchronizationProvidesModule
 import com.kok1337.feature_database_synchronization.presentation.fragment.DatabaseSynchronizationFragment
 import dagger.Component
 
 @[FeatureDatabaseSynchronization Component(
     dependencies = [DatabaseSynchronizationDependencies::class],
     modules = [
-        DatabasePreparationBindsModule::class,
-        DatabasePreparationProvidesModule::class,
+        DatabaseSynchronizationBindsModule::class,
+        DatabaseSynchronizationProvidesModule::class,
     ]
 )]
 internal interface DatabaseSynchronizationComponent {

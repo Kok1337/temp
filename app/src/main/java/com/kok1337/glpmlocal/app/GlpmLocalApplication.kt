@@ -6,6 +6,8 @@ import com.kok1337.database.di.component.DaggerDatabaseComponent
 import com.kok1337.database.di.dep.DatabaseDependencies
 import com.kok1337.feature_database_preparation.di.dep.DatabasePreparationDependencies
 import com.kok1337.feature_database_preparation.di.dep.DatabasePreparationDependenciesStore
+import com.kok1337.feature_database_synchronization.di.dep.DatabaseSynchronizationDependencies
+import com.kok1337.feature_database_synchronization.di.dep.DatabaseSynchronizationDependenciesStore
 import com.kok1337.glpmlocal.BuildConfig
 import com.kok1337.glpmlocal.di.component.AppComponent
 import com.kok1337.glpmlocal.di.component.DaggerAppComponent
@@ -54,6 +56,9 @@ class GlpmLocalApplication : Application() {
 
         DatabasePreparationDependenciesStore.deps =
             DatabasePreparationDependenciesImpl(appComponent)
+
+        DatabaseSynchronizationDependenciesStore.deps =
+            DatabaseSynchronizationDependenciesImpl(appComponent)
     }
 
     private fun property(key: String): String {
@@ -85,5 +90,13 @@ class GlpmLocalApplication : Application() {
         override val jdbcTemplate: JdbcTemplate get() = component.jdbcTemplate
         override val retrofit: Retrofit get() = component.retrofit
         override val applicationId: String get() = BuildConfig.APPLICATION_ID
+    }
+
+    inner class DatabaseSynchronizationDependenciesImpl(
+        private val component: AppComponent,
+    ): DatabaseSynchronizationDependencies {
+        override val context: Context get() = component.context
+        override val jdbcTemplate: JdbcTemplate get() = component.jdbcTemplate
+        override val retrofit: Retrofit get() = component.retrofit
     }
 }

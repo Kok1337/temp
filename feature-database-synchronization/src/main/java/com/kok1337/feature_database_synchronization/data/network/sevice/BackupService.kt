@@ -12,9 +12,10 @@ import retrofit2.http.Url
 
 interface BackupService {
     @[POST Multipart]
-    @Headers("Content-Type: multipart/form-data")
+//    @Headers("Content-Type: multipart/*")
     suspend fun uploadFile(
         @Url uploadBackupEndPoint: String,
         @Part file: MultipartBody.Part,
+//        @Part("desc") desc: RequestBody
     ): Response<ResponseBody>
 }

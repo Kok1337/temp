@@ -6,7 +6,7 @@ import dagger.Binds
 import dagger.Module
 
 @Module
-interface DatabasePreparationBindsModule {
+interface DatabaseSynchronizationBindsModule {
     @Binds
     @Suppress("FunctionName")
     fun BackupRepositoryImpl_to_BackupRepository(backupRepositoryImpl: BackupRepositoryImpl): BackupRepository
