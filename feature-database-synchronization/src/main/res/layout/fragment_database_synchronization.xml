@@ -2,53 +2,121 @@
 <layout xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android">
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".presentation.fragment.DatabaseSynchronizationFragment">
 
         <Button
-            android:id="@+id/sendButton"
+            android:id="@+id/createAndUploadBackupButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Send file"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <ProgressBar
-            android:id="@+id/progressBar"
-            style="@style/Widget.GlpmLocal.HorizontalProgressBar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:text="@string/upload_backup_button"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/sendButton" />
+            app:layout_constraintBottom_toTopOf="@id/downloadBackupButton"
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <Button
-            android:id="@+id/settingsButton"
+        <TextView
+            android:id="@+id/uploadBackupStatusTextView"
+            style="@style/Widget.GlpmLocal.TextView"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/status"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/createAndUploadBackupButton" />
+
+        <ProgressBar
+            android:id="@+id/uploadBackupProgressBar"
+            style="@style/Widget.GlpmLocal.HorizontalProgressBar"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="@id/uploadBackupStatusText"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/uploadBackupStatusText" />
+
+        <TextView
+            android:id="@+id/uploadBackupStatusText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="settings"
+            android:text="@string/result"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="@id/uploadBackupProgressBar"
+            app:layout_constraintStart_toStartOf="@id/uploadBackupProgressBar"
+            app:layout_constraintTop_toBottomOf="@id/uploadBackupStatusTextView" />
+
+        <ProgressBar
+            android:id="@+id/createBackupProgressBar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:indeterminateTint="@color/blue"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/uploadBackupStatusTextView" />
+
+
+        <Button
+            android:id="@+id/downloadBackupButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/download_backup_button"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/createAndUploadBackupButton" />
 
-        <Button
-            android:id="@+id/makeBackup"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="settings"
+        <TextView
+            android:id="@+id/downloadBackupStatusTextView"
+            style="@style/Widget.GlpmLocal.TextView"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/status"
+            android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/downloadBackupButton"
+            app:layout_goneMarginEnd="0dp" />
 
-        <Switch
-            android:id="@+id/switch1"
+        <ProgressBar
+            android:id="@+id/downloadBackupProgressBar"
+            style="@style/Widget.GlpmLocal.HorizontalProgressBar"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="@id/downloadBackupStatusText"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/downloadBackupStatusText" />
+
+        <TextView
+            android:id="@+id/downloadBackupStatusText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Switch"
-            app:layout_constraintBottom_toTopOf="@+id/settingsButton"
-            app:layout_constraintStart_toStartOf="parent" />
+            android:text="@string/result"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="@id/downloadBackupProgressBar"
+            app:layout_constraintStart_toStartOf="@id/downloadBackupProgressBar"
+            app:layout_constraintTop_toBottomOf="@id/downloadBackupStatusTextView" />
+
+        <ProgressBar
+            android:id="@+id/restoreBackupProgressBar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:indeterminateTint="@color/blue"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/downloadBackupStatusTextView" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

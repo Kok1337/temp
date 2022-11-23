@@ -39,6 +39,7 @@ android {
 dependencies {
     implementation project(path: ':core:iu')
     implementation project(path: ':core:network')
+    implementation project(path: ':core:result')
     implementation project(path: ':core:utils:file')
 
     // Dagger

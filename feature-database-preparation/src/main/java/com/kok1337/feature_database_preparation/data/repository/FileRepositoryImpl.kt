@@ -12,7 +12,6 @@ class FileRepositoryImpl @Inject constructor(
     private val fileService: FileService,
     private val databasePreparationPreferences: DatabasePreparationPreferences,
     @InstallerEndpoint private val installerEndpoint: String,
-    //    @UserJwtToken private val userJwtToken: String,
 ) : FileRepository {
     override suspend fun getInstallerArchiveSize(): Long =
         databasePreparationPreferences.getInstallerArchiveSize()

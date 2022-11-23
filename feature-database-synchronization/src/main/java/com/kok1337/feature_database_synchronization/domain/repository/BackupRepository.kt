@@ -7,4 +7,5 @@ import java.io.File
 
 interface BackupRepository {
     suspend fun uploadBackup(file: File, callback: UploadCallback?): Response<ResponseBody>
+    suspend fun downloadBackup(): Response<ResponseBody>
 }

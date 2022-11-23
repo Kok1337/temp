@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="result">Результат</string>
+    <string name="status">Статус</string>
+    <string name="upload_backup_button">Отправить Backup</string>
+    <string name="download_backup_button">Скачать Backup</string>
+</resources>

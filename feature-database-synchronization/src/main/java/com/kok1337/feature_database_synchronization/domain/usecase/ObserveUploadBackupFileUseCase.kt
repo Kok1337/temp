@@ -1,19 +1,17 @@
 package com.kok1337.feature_database_synchronization.domain.usecase
 
-import com.kok1337.feature_database_synchronization.di.qualifier.BackupFile
+import com.kok1337.feature_database_synchronization.di.qualifier.BackupFolder
 import com.kok1337.feature_database_synchronization.domain.repository.BackupRepository
-import com.kok1337.file.DownloadResult
 import com.kok1337.network.domain.model.UploadCallback
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import java.io.File
 import javax.inject.Inject
 
-class UploadBackupFileUseCase @Inject constructor(
+class ObserveUploadBackupFileUseCase @Inject constructor(
     private val backupRepository: BackupRepository,
-    @BackupFile private val backupFile: File,
+    @BackupFolder private val backupFolder: File,
 ) {
-    suspend fun invoke(callback: UploadCallback) {
+    suspend fun invoke(fileName: String, callback: UploadCallback) {
+        val backupFile = File(backupFolder, fileName)
         backupRepository.uploadBackup(backupFile, callback)
     }
 }

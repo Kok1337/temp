@@ -1,21 +1,19 @@
 package com.kok1337.feature_database_synchronization.data.network.sevice
 
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
 import okhttp3.ResponseBody
 import retrofit2.Response
-import retrofit2.http.Headers
-import retrofit2.http.Multipart
-import retrofit2.http.POST
-import retrofit2.http.Part
-import retrofit2.http.Url
+import retrofit2.http.*
 
 interface BackupService {
     @[POST Multipart]
-//    @Headers("Content-Type: multipart/*")
-    suspend fun uploadFile(
+    suspend fun uploadBackup(
         @Url uploadBackupEndPoint: String,
         @Part file: MultipartBody.Part,
-//        @Part("desc") desc: RequestBody
+    ): Response<ResponseBody>
+
+    @[GET Streaming]
+    suspend fun downloadBackup(
+        @Url installerArchiveEndpoint: String,
     ): Response<ResponseBody>
 }

@@ -17,6 +17,7 @@ import com.kok1337.feature_database_preparation.domain.model.InstallerState.*
 import com.kok1337.feature_database_preparation.domain.model.TermuxState
 import com.kok1337.feature_database_preparation.domain.model.TermuxState.*
 import com.kok1337.file.DownloadResult
+import com.kok1337.result.DataResult
 import com.kok1337.result.ErrorResult
 import com.kok1337.result.SuccessResult
 import com.kok1337.result.takeSuccess
@@ -65,13 +66,7 @@ class DatabasePreparationFragment : Fragment(R.layout.fragment_database_preparat
 
         lifecycleScope.launchWhenStarted {
             fragmentViewModel.installerDownloadResult
-                .onEach { result ->
-                    when (result) {
-                        is ErrorResult -> showErrorToast()
-                        is SuccessResult -> updateInstallerIndicator(result.takeSuccess()!!)
-                        else -> {}
-                    }
-                }
+                .onEach { onInstallerDownloadResultChanged(it) }
                 .collect()
         }
 
@@ -111,6 +106,14 @@ class DatabasePreparationFragment : Fragment(R.layout.fragment_database_preparat
             val visibility = if (field) View.VISIBLE else View.GONE
             binding.reinstallTermuxButton.visibility = visibility
         }
+
+    private fun onInstallerDownloadResultChanged(result: DataResult<DownloadResult>) {
+        when (result) {
+            is ErrorResult -> showErrorToast()
+            is SuccessResult -> updateInstallerIndicator(result.takeSuccess()!!)
+            else -> {}
+        }
+    }
 
     private fun onTermuxStateChanged(termuxState: TermuxState) {
         updateTermuxStatus(termuxState)
