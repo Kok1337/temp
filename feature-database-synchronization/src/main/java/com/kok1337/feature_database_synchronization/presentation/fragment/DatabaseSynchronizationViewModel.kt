@@ -54,6 +54,7 @@ class DatabaseSynchronizationViewModel(
         try {
             observeUploadBackupFileUseCase.invoke(fileName, uploadCallback)
         } catch (exception: Exception) {
+            exception.printStackTrace()
             _backupUploadResult.value = ErrorResult(exception)
             _Upload_backupState.value = UploadBackupState.UPLOAD_ERROR
             return

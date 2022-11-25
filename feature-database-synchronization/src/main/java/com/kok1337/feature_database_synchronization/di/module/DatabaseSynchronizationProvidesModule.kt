@@ -8,6 +8,7 @@ import com.kok1337.feature_database_synchronization.data.network.sevice.BackupSe
 import com.kok1337.feature_database_synchronization.di.qualifier.UploadBackupEndpoint
 import com.kok1337.feature_database_synchronization.di.qualifier.BackupFolder
 import com.kok1337.feature_database_synchronization.di.qualifier.CreateBackupScript
+import com.kok1337.feature_database_synchronization.di.qualifier.DownloadBackupEndpoint
 import com.kok1337.feature_database_synchronization.domain.factory.BackupNameFactory
 import dagger.Module
 import dagger.Provides
@@ -39,8 +40,13 @@ class DatabaseSynchronizationProvidesModule {
     }
 
     @[UploadBackupEndpoint Provides]
-    fun provideBackupEndpoint(): String {
+    fun provideUploadBackupEndpoint(): String {
         return "/file/upload"
+    }
+
+    @[DownloadBackupEndpoint Provides]
+    fun provideDownloadBackupEndpoint(): String {
+        return "/file/download"
     }
 
     @Provides

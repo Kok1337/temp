@@ -61,7 +61,7 @@ class DatabaseSynchronizationFragment : Fragment(R.layout.fragment_database_sync
         set(value) {
             field = value
             val visibility = if (field) View.VISIBLE else View.GONE
-            binding.backupStatusTextView.visibility = visibility
+            binding.uploadBackupStatusTextView.visibility = visibility
         }
 
     private var showCreateBackupIndicator: Boolean = false
@@ -102,7 +102,7 @@ class DatabaseSynchronizationFragment : Fragment(R.layout.fragment_database_sync
     }
 
     private fun updateBackupStatus(uploadBackupState: UploadBackupState) {
-        binding.backupStatusTextView.text = when(uploadBackupState) {
+        binding.uploadBackupStatusTextView.text = when(uploadBackupState) {
             CREATION_STARTED -> "Backup создается"
             CREATED -> "Backup создан"
             UPLOAD_STARTED -> "Идет загрузка"
