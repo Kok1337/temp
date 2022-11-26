@@ -11,6 +11,8 @@ import androidx.lifecycle.lifecycleScope
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.kok1337.feature_database_synchronization.R
 import com.kok1337.feature_database_synchronization.databinding.FragmentDatabaseSynchronizationBinding
+import com.kok1337.feature_database_synchronization.domain.model.RestoreBackupState
+import com.kok1337.feature_database_synchronization.domain.model.RestoreBackupState.*
 import com.kok1337.feature_database_synchronization.domain.model.UploadBackupState
 import com.kok1337.feature_database_synchronization.domain.model.UploadBackupState.*
 import com.kok1337.file.DownloadResult
@@ -42,7 +44,8 @@ class DatabaseSynchronizationFragment : Fragment(R.layout.fragment_database_sync
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.createAndUploadBackupButton.setOnClickListener { fragmentViewModel.runScript() }
+        binding.createAndUploadBackupButton.setOnClickListener { fragmentViewModel.sendBackup() }
+        binding.downloadAndRestoreBackupButton.setOnClickListener { fragmentViewModel.downloadBackup() }
 
         lifecycleScope.launchWhenStarted {
             fragmentViewModel.backupUploadResult
@@ -51,13 +54,25 @@ class DatabaseSynchronizationFragment : Fragment(R.layout.fragment_database_sync
         }
 
         lifecycleScope.launchWhenStarted {
-            fragmentViewModel.backupState
+            fragmentViewModel.uploadBackupState
+                .onEach { onBackupStateChanged(it) }
+                .collect()
+        }
+
+        lifecycleScope.launchWhenStarted {
+            fragmentViewModel.backupDownloadResult
+                .onEach { onBackupDownloadResultChanged(it) }
+                .collect()
+        }
+
+        lifecycleScope.launchWhenStarted {
+            fragmentViewModel.restoreBackupState
                 .onEach { onBackupStateChanged(it) }
                 .collect()
         }
     }
 
-    private var showBackupStatusTextView: Boolean = false
+    private var showUploadBackupStatusTextView: Boolean = false
         set(value) {
             field = value
             val visibility = if (field) View.VISIBLE else View.GONE
@@ -79,6 +94,40 @@ class DatabaseSynchronizationFragment : Fragment(R.layout.fragment_database_sync
             binding.uploadBackupStatusText.visibility = visibility
         }
 
+    private var enableCreateAndUploadBackupButton: Boolean = true
+        set(value) {
+            field = value
+            binding.createAndUploadBackupButton.isEnabled = field
+        }
+
+    private var showRestoreBackupStatusTextView: Boolean = false
+        set(value) {
+            field = value
+            val visibility = if (field) View.VISIBLE else View.GONE
+            binding.restoreBackupStatusTextView.visibility = visibility
+        }
+
+    private var showDownloadBackupIndicator: Boolean = false
+        set(value) {
+            field = value
+            val visibility = if (field) View.VISIBLE else View.GONE
+            binding.downloadBackupProgressBar.visibility = visibility
+            binding.downloadBackupStatusText.visibility = visibility
+        }
+
+    private var showRestoreBackupIndicator: Boolean = false
+        set(value) {
+            field = value
+            val visibility = if (field) View.VISIBLE else View.GONE
+            binding.restoreBackupProgressBar.visibility = visibility
+        }
+
+    private var enableDownloadAndRestoreBackupButton: Boolean = true
+        set(value) {
+            field = value
+            binding.downloadAndRestoreBackupButton.isEnabled = field
+        }
+
     private fun onBackupStateChanged(uploadBackupState: UploadBackupState) {
         updateBackupStatus(uploadBackupState)
         updateUI(uploadBackupState)
@@ -86,14 +135,14 @@ class DatabaseSynchronizationFragment : Fragment(R.layout.fragment_database_sync
 
     private fun onBackupUploadResultChanged(result: DataResult<DownloadResult>) {
         when (result) {
-            is ErrorResult -> showErrorToast()
+            is ErrorResult -> showErrorToast("Ошибка при отправке на сервер")
             is SuccessResult -> updateUploadIndicator(result.takeSuccess()!!)
             else -> {}
         }
     }
 
-    private fun showErrorToast() {
-        Toast.makeText(requireContext(), "Ошибка при отправке на сервер", Toast.LENGTH_SHORT).show()
+    private fun showErrorToast(message: String) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }
 
     private fun updateUploadIndicator(uploadResult: DownloadResult) {
@@ -102,29 +151,66 @@ class DatabaseSynchronizationFragment : Fragment(R.layout.fragment_database_sync
     }
 
     private fun updateBackupStatus(uploadBackupState: UploadBackupState) {
-        binding.uploadBackupStatusTextView.text = when(uploadBackupState) {
+        binding.uploadBackupStatusTextView.text = when (uploadBackupState) {
             CREATION_STARTED -> "Backup создается"
             CREATED -> "Backup создан"
             UPLOAD_STARTED -> "Идет загрузка"
             UPLOADED -> "Загружен на сервер"
             UPLOAD_ERROR -> "Ошибка при отправке"
-            NONE -> ""
+            UploadBackupState.NONE -> ""
+        }
+    }
+
+
+    private fun onBackupStateChanged(restoreBackupState: RestoreBackupState) {
+        updateBackupStatus(restoreBackupState)
+        updateUI(restoreBackupState)
+    }
+
+    private fun onBackupDownloadResultChanged(result: DataResult<DownloadResult>) {
+        when (result) {
+            is ErrorResult -> showErrorToast("Ошибка при загрузке")
+            is SuccessResult -> updateDownloadIndicator(result.takeSuccess()!!)
+            else -> {}
+        }
+    }
+
+    private fun updateDownloadIndicator(downloadResult: DownloadResult) {
+        binding.downloadBackupProgressBar.progress = downloadResult.savedProgress
+        binding.downloadBackupStatusText.text = downloadResult.toString()
+    }
+
+    private fun updateBackupStatus(restoreBackupState: RestoreBackupState) {
+        binding.restoreBackupStatusTextView.text = when (restoreBackupState) {
+            DOWNLOAD_STARTED -> "Загрузка обновлений"
+            DOWNLOADED -> "Обновления скачены"
+            DOWNLOAD_ERROR -> "Ошибка при загрузке"
+            RESTORE_STARTED -> "Установка обновлений"
+            RESTORED -> "Обновления установлены"
+            RestoreBackupState.NONE -> ""
         }
     }
 
     private fun updateUI(uploadBackupState: UploadBackupState) {
-        showBackupStatusTextView = uploadBackupState != NONE
+        showUploadBackupStatusTextView = uploadBackupState != UploadBackupState.NONE
         showCreateBackupIndicator = uploadBackupState == CREATION_STARTED
-        showUploadBackupIndicator = when(uploadBackupState) {
+        showUploadBackupIndicator = when (uploadBackupState) {
             UPLOAD_STARTED, UPLOADED -> true
+            else -> false
+        }
+        enableCreateAndUploadBackupButton = when (uploadBackupState) {
+            UploadBackupState.NONE, UPLOAD_ERROR, UPLOADED -> true
+            else -> false
+        }
+    }
+
+    private fun updateUI(restoreBackupState: RestoreBackupState) {
+        showRestoreBackupStatusTextView = restoreBackupState != RestoreBackupState.NONE
+        showDownloadBackupIndicator = restoreBackupState == DOWNLOAD_STARTED
+        showRestoreBackupIndicator = restoreBackupState == RESTORE_STARTED
+        enableDownloadAndRestoreBackupButton = when (restoreBackupState) {
+            RestoreBackupState.NONE, DOWNLOAD_ERROR, RESTORED -> true
             else -> false
         }
     }
 }
-
-/*binding.settingsButton.setOnClickListener {
-            val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-            val uri: Uri = Uri.fromParts("package", requireContext().packageName, null)
-            intent.data = uri
-            startActivity(intent)
-        }*/

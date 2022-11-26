@@ -3,15 +3,17 @@ package com.kok1337.feature_database_synchronization.domain.usecase
 import android.content.Context
 import android.content.Intent
 import com.kok1337.feature_database_synchronization.di.qualifier.BackupFolder
-import com.kok1337.feature_database_synchronization.di.qualifier.CreateBackupScript
+import com.kok1337.feature_database_synchronization.di.qualifier.BackupName
+import com.kok1337.feature_database_synchronization.di.qualifier.RestoreBackupScript
 import java.io.File
 import javax.inject.Inject
 
-class CreateBackupUseCase @Inject constructor(
-    @CreateBackupScript private val createCreateBackupScriptPath: String,
+class RestoreBackupUseCase @Inject constructor(
+    @RestoreBackupScript private val restoreBackupScript: String,
     private val convertPathToTermuxPathUseCase: ConvertPathToTermuxPathUseCase,
     @BackupFolder private val backupFolder: File,
-    private val context: Context
+    @BackupName private val backupName: String,
+    private val context: Context,
 ) {
     companion object {
         private const val TERMUX_PACKAGE_NAME = "com.termux"
@@ -22,16 +24,15 @@ class CreateBackupUseCase @Inject constructor(
         private const val RUN_COMMAND_BACKGROUND = "com.termux.RUN_COMMAND_BACKGROUND"
     }
 
-    fun invoke(backupName: String) {
+    fun invoke() {
         val intent = Intent()
         intent.setClassName(TERMUX_PACKAGE_NAME, TERMUX_SERVICE_CLASS_NAME)
         intent.action = RUN_COMMAND
-        intent.putExtra(RUN_COMMAND_PATH, createCreateBackupScriptPath)
+        intent.putExtra(RUN_COMMAND_PATH, restoreBackupScript)
         val folderPath = convertPathToTermuxPathUseCase.invoke(backupFolder.path)
-        val commandArguments = arrayOf(folderPath, backupName, "2")
+        val commandArguments = arrayOf(folderPath, backupName)
         intent.putExtra(RUN_COMMAND_ARGUMENTS, commandArguments)
-        intent.putExtra(RUN_COMMAND_BACKGROUND, true)
+        intent.putExtra(RUN_COMMAND_BACKGROUND, false)
         context.startService(intent)
     }
-
 }
