@@ -2,6 +2,7 @@ package com.kok1337.feature_database_synchronization.domain.usecase
 
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import com.kok1337.feature_database_synchronization.di.qualifier.BackupFolder
 import com.kok1337.feature_database_synchronization.di.qualifier.BackupName
 import com.kok1337.feature_database_synchronization.di.qualifier.RestoreBackupScript
@@ -29,8 +30,12 @@ class RestoreBackupUseCase @Inject constructor(
         intent.setClassName(TERMUX_PACKAGE_NAME, TERMUX_SERVICE_CLASS_NAME)
         intent.action = RUN_COMMAND
         intent.putExtra(RUN_COMMAND_PATH, restoreBackupScript)
+
+        val fileForLog = File(backupFolder, backupName)
+        Log.e(javaClass.simpleName, fileForLog.length().toString())
+
         val folderPath = convertPathToTermuxPathUseCase.invoke(backupFolder.path)
-        val commandArguments = arrayOf(folderPath, backupName)
+        val commandArguments = arrayOf(folderPath, backupName, "2")
         intent.putExtra(RUN_COMMAND_ARGUMENTS, commandArguments)
         intent.putExtra(RUN_COMMAND_BACKGROUND, false)
         context.startService(intent)
